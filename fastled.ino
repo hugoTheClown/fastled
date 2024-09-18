@@ -1,6 +1,7 @@
 #include <FastLED.h>
 #define NUM_LEDS 512
-#define DATA_PIN 16
+#define DATA_PIN 12
+#define RELE_PIN 13
 
 CRGB leds[NUM_LEDS];
 
@@ -77,6 +78,14 @@ void processCMD(char *input) {
     RUNNING = true;
   }
 
+  if (strcmp(input, "ON") == 0) {
+    digitalWrite(RELE_PIN, HIGH);
+  }
+
+  if (strcmp(input, "OFF") == 0) {
+    digitalWrite(RELE_PIN, LOW);
+  }
+
   if (strcmp(input, "BLINK") == 0) {
     blinkArrow();
   }
@@ -92,6 +101,8 @@ void processCMD(char *input) {
     Serial.println("BLINKNN - zablika sipkou NN krat (0-10)");
     Serial.println("START - zapne sipku");
     Serial.println("STOP - vypne sipku");
+    Serial.println("ON - zapne svetla");
+    Serial.println("OFF - vypne svetl");
     Serial.println("REDNNN - nastavi CERVENOU slozku barvy na hodnotu NNN (0-255)");
     Serial.println("GREENNNN - nastavi ZELENOU slozku barvy na hodnotu NNN (0-255)");
     Serial.println("BLUENNN - nastavi MODROU slozku barvy na hodnotu NNN (0-255)");
@@ -164,10 +175,23 @@ void setup() {
   FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
   Serial.begin(9600);
-
+  Serial.println("");
   Serial.println("Kralovstvi zeleznic (c) 2024");
   Serial.println("-------------------------------");
   Serial.println("Zelena sipka by clown");
+  pinMode(RELE_PIN, OUTPUT);
+  digitalWrite(RELE_PIN, LOW);
+  green = 0;
+  red=255;
+  blinkArrow();
+  digitalWrite(RELE_PIN, HIGH);
+  delay(3000);
+  digitalWrite(RELE_PIN, LOW);
+  Serial.println("-------------------------------");
+  Serial.println("Setup done....");
+  Serial.println("-------------------------------");
+  green = 0;
+  red=255;
 }
 
 // *********************************************** DRAW BOTH ARROWS
